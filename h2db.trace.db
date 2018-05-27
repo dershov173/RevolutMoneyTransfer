@@ -3534,3 +3534,6 @@ Caused by: java.nio.channels.ClosedByInterruptException
 2018-05-26 23:06:54 jdbc[4]: exception
 org.h2.jdbc.JdbcSQLException: Нет данных
 No data is available [2000-196]
+2018-05-27 22:55:15 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: Нет данных
+No data is available [2000-196]

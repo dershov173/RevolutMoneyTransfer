@@ -1,5 +1,7 @@
 package db_service;
 
+import exceptions.AccountNotFoundException;
+
 import java.sql.*;
 
 public class Executor {
@@ -18,7 +20,7 @@ public class Executor {
         }
     }
 
-    public <T> T executeQuery(String query, ResultHandler<T> handler, Object ... params) throws SQLException {
+    public <T> T executeQuery(String query, ResultHandler<T> handler, Object ... params) throws SQLException{
         try(PreparedStatement statement = conn.prepareStatement(query)){
             for (int i = 1; i <= params.length; i++){
                 statement.setObject(i, params[i-1]);

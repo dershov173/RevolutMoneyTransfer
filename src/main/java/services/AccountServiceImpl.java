@@ -23,9 +23,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getAccount(long accountId) throws DBException {
+    public Account getAccount(long accountId) throws DBException, AccountNotFoundException {
         try {
-            return (accountsDao.get(accountId));
+            Account result = accountsDao.get(accountId);
+            if (result == null){
+                throw new AccountNotFoundException("Account with id=" + accountId +
+                "not found");
+            }
+            return result;
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -41,12 +46,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void updateAmount(long accountId, BigDecimal updateValue) throws DBException, TransactionNotAllowedException {
+    public void updateAmount(long accountId, BigDecimal updateValue) throws DBException, TransactionNotAllowedException, AccountNotFoundException {
         try {
             final Account accountToUpdate = accountsDao.get(accountId);
-            if (accountToUpdate == null) {
-                throw new AccountNotFoundException("Account with id=" + accountId + "could not be found");
-            }
             synchronized (accountToUpdate){
                 try (Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
                     BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
@@ -64,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public long createAccount(long userId, BigDecimal initialAmount) throws DBException, TransactionNotAllowedException {
+    public void createAccount(long userId, BigDecimal initialAmount) throws DBException, TransactionNotAllowedException {
         if (initialAmount.compareTo(BigDecimal.ZERO) < 0){
             throw new TransactionNotAllowedException("The initial amount of money must be positive to create account");
         }
@@ -75,7 +77,6 @@ public class AccountServiceImpl implements AccountService {
                 dao.createTable();
                 dao.createAccount(userId, initialAmount);
                 connection.commit();
-                return dao.getAccountId(userId);
             } catch (SQLException e) {
                 connection.rollback();
                 throw new DBException(e);

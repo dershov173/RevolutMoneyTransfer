@@ -24,22 +24,14 @@ public class AccountsDaoImpl  implements AccountsDao{
     public Account get(long accountId) throws SQLException {
         final String query = "select * from accounts where account_id=?";
         return executor.executeQuery(query, result -> {
-            if (!result.next()){
-                throw new AccountNotFoundException("Account with id=" + accountId + "could not be found");
+            if (result.next()) {
+                return new Account(result.getLong("account_id"),
+                        result.getLong("user_id"),
+                        result.getBigDecimal("amount"));
+            } else {
+                return null;
             }
-            return new Account(result.getLong("account_id"),
-                    result.getLong("user_id"),
-                    result.getBigDecimal("amount"));
         }, accountId);
-    }
-
-    @Override
-    public long getAccountId(long userId) throws SQLException {
-        final String query = "select account_id from accounts where user_id=?";
-        return executor.executeQuery(query, result -> {
-            result.next();
-            return result.getLong(1);
-        }, userId);
     }
 
     @Override

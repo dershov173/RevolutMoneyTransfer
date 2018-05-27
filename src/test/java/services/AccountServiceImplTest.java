@@ -1,6 +1,7 @@
 package services;
 
 import dao.AccountsDao;
+import exceptions.AccountNotFoundException;
 import exceptions.DBException;
 import exceptions.TransactionNotAllowedException;
 import model.Account;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class AccountServiceImplTest {
 
     @Test(expected = TransactionNotAllowedException.class)
-    public void testNegativeAmount() throws DBException, TransactionNotAllowedException, SQLException {
+    public void testNegativeAmount() throws DBException, TransactionNotAllowedException, SQLException, AccountNotFoundException {
         AccountsDao accountsDao = mock(AccountsDao.class);
         AccountServiceImpl accountService = new AccountServiceImpl(accountsDao);
 

@@ -45,9 +45,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void commitTransaction(BigDecimal amount, long fromAccountId, long toAccountId) throws DBException, AccountNotFoundException, TransactionNotAllowedException {
+        if(fromAccountId == toAccountId){
+            throw new TransactionNotAllowedException("You cannot transfer money between the same accounts");
+        }
+
         try {
             Account fromAccount = accountsDao.get(fromAccountId);
             Account toAccount = accountsDao.get(toAccountId);
+            if (fromAccount == null || toAccount == null){
+                throw new AccountNotFoundException("Account not found");
+            }
 
             final BigDecimal calculatedValue = fromAccount.getAmount().add(amount.negate());
 
@@ -60,19 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
                         "has not enough money to transfer");
             }
 
-            if(fromAccount.getAccountId() >= toAccount.getAccountId()){
-                synchronized (fromAccount){
-                    synchronized (toAccount){
-                        transferMoney(fromAccount, toAccount, amount);
-                    }
-                }
-            } else {
-                synchronized (toAccount){
-                    synchronized (fromAccount){
-                        transferMoney(fromAccount, toAccount, amount);
-                    }
-                }
-            }
+            transferMoney(fromAccount, toAccount, amount);
         } catch (SQLException e) {
             throw new DBException(e);
         }
