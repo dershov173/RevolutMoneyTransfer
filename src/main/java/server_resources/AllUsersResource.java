@@ -1,5 +1,7 @@
 package server_resources;
 
+import dao.UsersDaoImpl;
+import db_service.C3P0DataSource;
 import services.UserServiceImpl;
 import exceptions.DBException;
 import org.json.JSONArray;
@@ -15,14 +17,16 @@ import org.restlet.resource.ServerResource;
 import services.UserService;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 ;
 
 public class AllUsersResource extends ServerResource {
     private final UserService service;
+    private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
 
     public AllUsersResource() {
-        service = new UserServiceImpl();
+        service = new UserServiceImpl(new UsersDaoImpl(conn));
     }
 
     @Post

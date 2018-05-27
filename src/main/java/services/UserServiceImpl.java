@@ -11,11 +11,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
+    private final UsersDao usersDao;
+
+    public UserServiceImpl(UsersDao usersDao) {
+        this.usersDao = usersDao;
+    }
 
     public User getUser(long id) throws DBException {
         try {
-            return (new UsersDaoImpl(conn).get(id));
+            return (usersDao.get(id));
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -23,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getAllUsers() throws DBException{
         try {
-            return (new UsersDaoImpl(conn).getAllEntries());
+            return (usersDao.getAllEntries());
         } catch (SQLException e) {
             throw new DBException(e);
         }

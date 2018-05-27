@@ -3,6 +3,7 @@ package services;
 import dao.AccountsDao;
 import dao.AccountsDaoImpl;
 import dao.TransactionDaoImpl;
+import dao.TransactionsDao;
 import db_service.C3P0DataSource;
 import exceptions.AccountNotFoundException;
 import exceptions.DBException;
@@ -16,13 +17,18 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class TransactionServiceImpl implements TransactionService {
+    private final AccountsDao accountsDao;
+    private final TransactionsDao transactionsDao;
 
-    private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
+    public TransactionServiceImpl(TransactionsDao transactionsDao, AccountsDao accountsDao) {
+        this.transactionsDao = transactionsDao;
+        this.accountsDao = accountsDao;
+    }
 
     @Override
     public Transaction getTransaction(long transactionId) throws DBException {
         try {
-            return new TransactionDaoImpl(conn).get(transactionId);
+            return transactionsDao.get(transactionId);
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -31,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getAllTransactions() throws DBException {
         try {
-            return new TransactionDaoImpl(conn).getAllEntries();
+            return transactionsDao.getAllEntries();
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -40,7 +46,6 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void commitTransaction(BigDecimal amount, long fromAccountId, long toAccountId) throws DBException, AccountNotFoundException, TransactionNotAllowedException {
         try {
-            AccountsDao accountsDao = new AccountsDaoImpl(conn);
             Account fromAccount = accountsDao.get(fromAccountId);
             Account toAccount = accountsDao.get(toAccountId);
 

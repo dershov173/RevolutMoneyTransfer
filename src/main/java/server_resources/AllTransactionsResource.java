@@ -1,5 +1,8 @@
 package server_resources;
 
+import dao.AccountsDaoImpl;
+import dao.TransactionDaoImpl;
+import db_service.C3P0DataSource;
 import exceptions.AccountNotFoundException;
 import exceptions.DBException;
 import exceptions.TransactionNotAllowedException;
@@ -19,12 +22,14 @@ import services.TransactionServiceImpl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Connection;
 
 public class AllTransactionsResource extends ServerResource {
+    private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
     private final TransactionService service;
 
     public AllTransactionsResource() {
-        service = new TransactionServiceImpl();
+        service = new TransactionServiceImpl(new TransactionDaoImpl(conn), new AccountsDaoImpl(conn));
     }
 
     @Post

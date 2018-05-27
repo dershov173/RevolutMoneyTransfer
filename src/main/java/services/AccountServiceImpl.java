@@ -2,8 +2,11 @@ package services;
 
 import dao.AccountsDao;
 import dao.AccountsDaoImpl;
+import dao.Dao;
 import db_service.C3P0DataSource;
+import exceptions.AccountNotFoundException;
 import exceptions.DBException;
+import exceptions.TransactionNotAllowedException;
 import model.Account;
 
 import java.math.BigDecimal;
@@ -13,12 +16,16 @@ import java.util.List;
 
 public class AccountServiceImpl implements AccountService {
 
-    private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
+    private final AccountsDao accountsDao;
+
+    public AccountServiceImpl(AccountsDao accountsDao) {
+        this.accountsDao = accountsDao;
+    }
 
     @Override
     public Account getAccount(long accountId) throws DBException {
         try {
-            return (new AccountsDaoImpl(conn).get(accountId));
+            return (accountsDao.get(accountId));
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -27,25 +34,25 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getAllAccounts() throws DBException {
         try {
-            return (new AccountsDaoImpl(conn).getAllEntries());
+            return (accountsDao.getAllEntries());
         } catch (SQLException e) {
             throw new DBException(e);
         }
     }
 
     @Override
-    public boolean updateAmount(long accountId, BigDecimal updateValue) throws DBException { ;
-        AccountsDao dao = new AccountsDaoImpl(conn);
+    public void updateAmount(long accountId, BigDecimal updateValue) throws DBException, TransactionNotAllowedException {
         try {
-            final Account accountToUpdate = dao.get(accountId);
+            final Account accountToUpdate = accountsDao.get(accountId);
             if (accountToUpdate == null) {
-                return false;
+                throw new AccountNotFoundException("Account with id=" + accountId + "could not be found");
             }
             synchronized (accountToUpdate){
                 try (Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
                     BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
                     if (calculatedValue.compareTo(BigDecimal.ZERO) < 0) {
-                        return false;
+                        throw new TransactionNotAllowedException("The account with id="
+                                + accountId + "has not enough money to perform transaction");
                     } else {
                         new AccountsDaoImpl(connection).updateAmount(accountId, calculatedValue);
                     }
@@ -54,11 +61,13 @@ public class AccountServiceImpl implements AccountService {
         } catch (SQLException e) {
             throw new DBException(e);
         }
-        return true;
     }
 
     @Override
-    public long createAccount(long userId, BigDecimal initialAmount) throws DBException {
+    public long createAccount(long userId, BigDecimal initialAmount) throws DBException, TransactionNotAllowedException {
+        if (initialAmount.compareTo(BigDecimal.ZERO) < 0){
+            throw new TransactionNotAllowedException("The initial amount of money must be positive to create account");
+        }
         try (Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
             try {
                 connection.setAutoCommit(false);

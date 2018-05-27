@@ -1,5 +1,7 @@
 package server_resources;
 
+import dao.UsersDaoImpl;
+import db_service.C3P0DataSource;
 import services.UserServiceImpl;
 import exceptions.DBException;
 import org.json.JSONObject;
@@ -9,11 +11,15 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import services.UserService;
 
+import java.sql.Connection;
+
 public class SingleUserResource extends ServerResource {
 
+    private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
     private final UserService service;
+
     public SingleUserResource() {
-        service = new UserServiceImpl();
+        service = new UserServiceImpl(new UsersDaoImpl(conn));
     }
 
     @Get("json")
