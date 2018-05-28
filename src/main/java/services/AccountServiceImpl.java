@@ -82,6 +82,7 @@ public class AccountServiceImpl implements AccountService {
                 connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
                 AccountsDao dao = new AccountsDaoImpl(connection);
                 final Account accountToUpdate = dao.get(accountId);
+
                 BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
                 if (calculatedValue.compareTo(BigDecimal.ZERO) < 0) {
                     throw new TransactionNotAllowedException("The account with id="
