@@ -7,11 +7,17 @@ public class Account {
     private final long accountId;
     private final long userId;
     private final BigDecimal amount;
+    private final int version;
 
-    public Account(long accountId, long userId, BigDecimal amount) {
+    public Account(long accountId, long userId, BigDecimal amount, int version) {
         this.accountId = accountId;
         this.userId = userId;
         this.amount = amount;
+        this.version = version;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     public long getAccountId() {

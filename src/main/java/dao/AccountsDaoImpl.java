@@ -1,7 +1,6 @@
 package dao;
 
 import db_service.Executor;
-import exceptions.AccountNotFoundException;
 import model.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountsDaoImpl  implements AccountsDao{
-    private static final Logger logger = LogManager.getLogger("C3PODataSource");
+    private static final Logger logger = LogManager.getLogger("AccountsDaoImpl");
     private Executor executor;
 
     public AccountsDaoImpl(Connection conn) {
@@ -27,7 +26,8 @@ public class AccountsDaoImpl  implements AccountsDao{
             if (result.next()) {
                 return new Account(result.getLong("account_id"),
                         result.getLong("user_id"),
-                        result.getBigDecimal("amount"));
+                        result.getBigDecimal("amount"),
+                        result.getInt("version"));
             } else {
                 return null;
             }
@@ -41,7 +41,8 @@ public class AccountsDaoImpl  implements AccountsDao{
             while (result.next()) {
                 Account account = new Account(result.getLong("account_id"),
                         result.getLong("user_id"),
-                        result.getBigDecimal("amount"));
+                        result.getBigDecimal("amount"),
+                        result.getInt("version"));
                 accounts.add(account);
             }
             return accounts;
@@ -59,6 +60,7 @@ public class AccountsDaoImpl  implements AccountsDao{
                 "account_id bigint auto_increment, " +
                 "amount decimal, " +
                 "user_id bigint not null, " +
+                "version int" +
                 "primary key(account_id), " +
                 "foreign key(user_id) references users(user_id))");
         logger.info("Table accounts (account_id bigint primary key, " +

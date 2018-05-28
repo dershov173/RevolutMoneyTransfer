@@ -25,7 +25,7 @@ public class C3P0DataSource {
             comboPooledDataSource
                     .setDriverClass("org.h2.Driver");
             comboPooledDataSource
-                    .setJdbcUrl("jdbc:h2:./h2db");
+                    .setJdbcUrl("jdbc:h2:./h2db;LOCK_TIMEOUT=10000;LOCK_MODE=3");
             comboPooledDataSource.setUser("dershov");
             comboPooledDataSource.setPassword("");
             logger.info("Datasource to jbdc url = jdbc:h2:./h2db successfully established");

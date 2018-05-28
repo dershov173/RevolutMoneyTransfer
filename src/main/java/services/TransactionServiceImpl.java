@@ -16,6 +16,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static java.sql.Connection.TRANSACTION_SERIALIZABLE;
+
 public class TransactionServiceImpl implements TransactionService {
     private final AccountsDao accountsDao;
     private final TransactionsDao transactionsDao;
@@ -75,6 +77,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void transferMoney(Account fromAccount, Account toAccount, BigDecimal amount) throws SQLException {
         try(Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
+            connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
             connection.setAutoCommit(false);
             long fromAccountAccountId = fromAccount.getAccountId();
             long toAccountAccountId = toAccount.getAccountId();

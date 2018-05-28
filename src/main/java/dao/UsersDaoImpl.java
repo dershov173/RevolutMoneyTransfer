@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersDaoImpl implements UsersDao {
-    private static final Logger logger = LogManager.getLogger("C3PODataSource");
+    private static final Logger logger = LogManager.getLogger("UsersDaoImpl");
     private Executor executor;
 
     public UsersDaoImpl(Connection connection) {

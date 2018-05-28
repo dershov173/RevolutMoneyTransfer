@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDaoImpl implements TransactionsDao {
-    private static final Logger logger = LogManager.getLogger("C3PODataSource");
+    private static final Logger logger = LogManager.getLogger("TransactionDaoImpl");
     private final Executor executor;
 
     public TransactionDaoImpl(Connection conn) {
