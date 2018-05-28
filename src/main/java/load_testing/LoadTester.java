@@ -10,7 +10,6 @@ import services.TransactionServiceImpl;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -23,10 +22,8 @@ public class LoadTester {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         ExecutorService executorService = Executors.newFixedThreadPool((int) NUM_EXECUTORS);
 
-
         List<Future<Long>> results = executorService.invokeAll(formCollectionOfOperations());
         long counters = 0;
-
         for(Future<Long> result : results){
             counters +=result.get();
         }
