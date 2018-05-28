@@ -15,6 +15,8 @@ public interface AccountsDao extends Dao<Account> {
     @Override
     void dropTable() throws SQLException;
 
-    int updateAmount(long accountId, BigDecimal newValue) throws SQLException;
+    Account getVersioningAccount(long accountId, int version) throws SQLException;
+
+    int updateAmount(long accountId, BigDecimal newValue, int version) throws SQLException;
     void createAccount(long userId, BigDecimal amount) throws  SQLException;
 }

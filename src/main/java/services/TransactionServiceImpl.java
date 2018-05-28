@@ -69,26 +69,29 @@ public class TransactionServiceImpl implements TransactionService {
                         "has not enough money to transfer");
             }
 
-            transferMoney(fromAccount, toAccount, amount);
+            transferMoney(fromAccountId, toAccountId, amount);
         } catch (SQLException e) {
             throw new DBException(e);
         }
     }
 
-    private void transferMoney(Account fromAccount, Account toAccount, BigDecimal amount) throws SQLException {
+    private void transferMoney(long fromAccountId, long toAccountId, BigDecimal amount) throws SQLException {
         try(Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
             connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
             connection.setAutoCommit(false);
-            long fromAccountAccountId = fromAccount.getAccountId();
-            long toAccountAccountId = toAccount.getAccountId();
 
             final AccountsDao accountsDao = new AccountsDaoImpl(connection);
             final TransactionDaoImpl transactionDao = new TransactionDaoImpl(connection);
 
-            accountsDao.updateAmount(fromAccountAccountId, fromAccount.getAmount().add(amount.negate()));
-            accountsDao.updateAmount(toAccountAccountId, toAccount.getAmount().add(amount));
+            Account fromAccount = accountsDao.get(fromAccountId);
+            Account toAccount = accountsDao.get(toAccountId);
+
+            accountsDao.updateAmount(fromAccountId, fromAccount.getAmount().add(amount.negate()), 0);
+            accountsDao.updateAmount(toAccountId, toAccount.getAmount().add(amount), 0);
+
+
             transactionDao.createTable();
-            transactionDao.commitTransaction(amount, fromAccountAccountId, toAccountAccountId);
+            transactionDao.commitTransaction(amount, fromAccountId, toAccountId);
             connection.setAutoCommit(true);
         }
     }

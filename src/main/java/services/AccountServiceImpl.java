@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static java.sql.Connection.TRANSACTION_SERIALIZABLE;
+
 public class AccountServiceImpl implements AccountService {
 
     private final AccountsDao accountsDao;
@@ -47,21 +49,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void updateAmount(long accountId, BigDecimal updateValue) throws DBException, TransactionNotAllowedException, AccountNotFoundException {
-        try {
-            final Account accountToUpdate = accountsDao.get(accountId);
-            synchronized (accountToUpdate){
-                try (Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
-                    BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
-                    if (calculatedValue.compareTo(BigDecimal.ZERO) < 0) {
-                        throw new TransactionNotAllowedException("The account with id="
-                                + accountId + "has not enough money to perform transaction");
-                    } else {
-                        new AccountsDaoImpl(connection).updateAmount(accountId, calculatedValue);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new DBException(e);
+        int numberOfUpdatedRows = 0;
+        while (numberOfUpdatedRows == 0){
+            numberOfUpdatedRows = updateAccount(accountId, updateValue);
         }
     }
 
@@ -86,5 +76,22 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-
+    private int updateAccount(long accountId, BigDecimal updateValue) throws TransactionNotAllowedException, DBException {
+        try {
+            try (Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
+                connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
+                AccountsDao dao = new AccountsDaoImpl(connection);
+                final Account accountToUpdate = dao.get(accountId);
+                BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
+                if (calculatedValue.compareTo(BigDecimal.ZERO) < 0) {
+                    throw new TransactionNotAllowedException("The account with id="
+                            + accountId + "has not enough money to perform transaction");
+                } else {
+                    return dao.updateAmount(accountId, calculatedValue, accountToUpdate.getVersion());
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
 }
