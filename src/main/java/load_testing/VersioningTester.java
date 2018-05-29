@@ -16,11 +16,12 @@ import java.util.concurrent.*;
 public class VersioningTester {
     private static final int NUM_EXECUTORS = 10000;
     private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
-    public static final int ACCOUNT_ID = 3;
+    public static final int ACCOUNT_ID = 1;
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
+    public static void testVersioning() throws SQLException, ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_EXECUTORS);
         AccountsDao accountsDao = new AccountsDaoImpl(conn);
+        accountsDao.createAccount(ACCOUNT_ID, new BigDecimal(10));
         final BigDecimal oldBalance = accountsDao.get(ACCOUNT_ID).getAmount();
         System.out.println(oldBalance);
 
@@ -34,7 +35,7 @@ public class VersioningTester {
         System.out.println(newBalance);
 
         assert newBalance.equals(oldBalance.add(new BigDecimal(NUM_EXECUTORS)));
-        System.out.println("main ends");
+        System.out.println("versioning successful");
 //        accountsDao.createAccount(3, new BigDecimal(100));
 //        accountsDao.updateAmount(3, new BigDecimal(150), 2);
 

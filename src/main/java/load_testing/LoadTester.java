@@ -21,9 +21,14 @@ public class LoadTester {
     private static final long firstAccountId = 1;
     private static final long secondAccountId = 2;
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException, SQLException {
-        final int oldVersion1 = new AccountsDaoImpl(conn).get(firstAccountId).getVersion();
-        final int oldVersion2 = new AccountsDaoImpl(conn).get(secondAccountId).getVersion();
+    public static void testTransactions() throws InterruptedException, ExecutionException, SQLException {
+        AccountsDaoImpl accountsDao = new AccountsDaoImpl(conn);
+
+        accountsDao.createTable();
+        accountsDao.createAccount(firstAccountId, new BigDecimal(10));
+        accountsDao.createAccount(secondAccountId, new BigDecimal(10));
+        final int oldVersion1 = accountsDao.get(firstAccountId).getVersion();
+        final int oldVersion2 = accountsDao.get(secondAccountId).getVersion();
 
         ExecutorService executorService = Executors.newFixedThreadPool((int) NUM_EXECUTORS);
 
@@ -38,7 +43,7 @@ public class LoadTester {
 
         assert newVersion1 == oldVersion1 + NUM_EXECUTORS;
         assert newVersion2 == oldVersion2 + NUM_EXECUTORS;
-        System.out.println("main ends");
+        System.out.println("test for loading successful");
 
     }
 
@@ -52,7 +57,7 @@ public class LoadTester {
 
                 long threadId = Thread.currentThread().getId();
                 long fromAccountId = threadId % 2 == 0? firstAccountId:secondAccountId;
-                long toAccountId = 1;//threadId % 2 == 0? secondAccountId:firstAccountId;
+                long toAccountId = threadId % 2 == 0? secondAccountId:firstAccountId;
 
                 BigDecimal valueToTransfer = new BigDecimal(1);
                 try {
@@ -60,8 +65,10 @@ public class LoadTester {
                 } catch (TransactionNotAllowedException e){
                     System.out.println(e.getMessage());
                 }
-                BigDecimal amount = accountsDao.get(1).getAmount();
-                assert amount.compareTo(BigDecimal.ZERO) > 0;
+                BigDecimal amount1 = accountsDao.get(fromAccountId).getAmount();
+                BigDecimal amount2 = accountsDao.get(fromAccountId).getAmount();
+                assert  amount1.compareTo(BigDecimal.ZERO) > 0 &&
+                        amount2.compareTo(BigDecimal.ZERO) > 0 ;
                 return threadId % NUM_EXECUTORS;
             });
         }
