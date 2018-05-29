@@ -137,7 +137,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <finalName>
-                        revolut-money-transfer-jar-with-dependencies
+                        revolut-money-transfer
                     </finalName>
                 </configuration>
                 <executions>
