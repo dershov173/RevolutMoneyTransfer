@@ -1,10 +1,11 @@
-package load_testing;
+package synchronization;
 
 import dao.AccountsDaoImpl;
 import dao.Dao;
 import dao.TransactionDaoImpl;
 import dao.UsersDaoImpl;
 import db_service.C3P0DataSource;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ComplexTestsExecutor {
+public class ComplexExecutionChecker {
     private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
+    @Test
+    public void test() throws SQLException, ExecutionException, InterruptedException {
         testVersioning();
         testLoading();
         dropTables();

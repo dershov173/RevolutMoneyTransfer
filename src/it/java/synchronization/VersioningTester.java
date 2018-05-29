@@ -1,4 +1,4 @@
-package load_testing;
+package synchronization;
 
 import dao.AccountsDao;
 import dao.AccountsDaoImpl;

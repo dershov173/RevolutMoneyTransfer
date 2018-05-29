@@ -1,4 +1,4 @@
-package load_testing;
+package synchronization;
 
 
 import dao.AccountsDaoImpl;
@@ -25,8 +25,8 @@ public class LoadTester {
         AccountsDaoImpl accountsDao = new AccountsDaoImpl(conn);
 
         accountsDao.createTable();
-        accountsDao.createAccount(firstAccountId, new BigDecimal(10));
-        accountsDao.createAccount(secondAccountId, new BigDecimal(10));
+        accountsDao.createAccount(firstAccountId, new BigDecimal(1000));
+        accountsDao.createAccount(secondAccountId, new BigDecimal(1000));
         final int oldVersion1 = accountsDao.get(firstAccountId).getVersion();
         final int oldVersion2 = accountsDao.get(secondAccountId).getVersion();
 
