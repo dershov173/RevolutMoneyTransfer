@@ -9,10 +9,15 @@ A RESTful API (including data model and the backing implementation) for money tr
 
 # How to install:
 cd RevolutMoneyTransfer
+
 mvn clean install
+
 cd target
-java -jar revolut.money-transfer-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+java -jar revolut-money-transfer-jar-with-dependencies.jar
+
 Server up and running on localhost:8080
+
 # Add users and accounts
 Let us now add two users:
 
