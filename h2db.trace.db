@@ -37561,3 +37561,171 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:/home/dersho
 	at org.h2.mvstore.FileStore.open(FileStore.java:173)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:347)
 	... 24 more
+2018-05-29 21:56:09 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[10]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[9]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[16]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:09 jdbc[17]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:19 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:19 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:19 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:56:19 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[10]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[9]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:46 jdbc[17]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:56 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 21:57:56 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[11]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[10]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[12]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[9]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]
+2018-05-29 22:01:44 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: Время ожидания блокировки таблицы  истекло
+Timeout trying to lock table ; SQL statement:
+update accounts set amount=?, version=version+1 where account_id =? and version =? [50200-196]

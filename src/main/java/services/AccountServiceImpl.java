@@ -2,7 +2,6 @@ package services;
 
 import dao.AccountsDao;
 import dao.AccountsDaoImpl;
-import dao.Dao;
 import db_service.C3P0DataSource;
 import exceptions.AccountNotFoundException;
 import exceptions.DBException;
@@ -13,8 +12,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
-import static java.sql.Connection.TRANSACTION_SERIALIZABLE;
 
 public class AccountServiceImpl implements AccountService {
 
@@ -78,18 +75,14 @@ public class AccountServiceImpl implements AccountService {
 
     private int updateAccount(long accountId, BigDecimal updateValue) throws TransactionNotAllowedException, DBException {
         try {
-            try (Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
-                connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
-                AccountsDao dao = new AccountsDaoImpl(connection);
-                final Account accountToUpdate = dao.get(accountId);
+            final Account accountToUpdate = accountsDao.get(accountId);
 
-                BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
-                if (calculatedValue.compareTo(BigDecimal.ZERO) < 0) {
-                    throw new TransactionNotAllowedException("The account with id="
-                            + accountId + "has not enough money to perform transaction");
-                } else {
-                    return dao.updateAmount(accountId, calculatedValue, accountToUpdate.getVersion());
-                }
+            BigDecimal calculatedValue = accountToUpdate.getAmount().add(updateValue);
+            if (calculatedValue.compareTo(BigDecimal.ZERO) < 0) {
+                throw new TransactionNotAllowedException("The account with id="
+                        + accountId + "has not enough money to perform transaction");
+            } else {
+                return accountsDao.updateAmount(accountId, calculatedValue, accountToUpdate.getVersion());
             }
         } catch (SQLException e) {
             throw new DBException(e);

@@ -15,9 +15,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-
-import static java.sql.Connection.TRANSACTION_SERIALIZABLE;
 
 public class TransactionServiceImpl implements TransactionService {
     private final AccountsDao accountsDao;
@@ -62,22 +59,19 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void transferMoney(long fromAccountId, long toAccountId, BigDecimal amount) throws TransactionNotAllowedException, AccountNotFoundException, DBException {
         try(Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
-            connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
-            connection.setAutoCommit(false);
+
 
             final AccountService accountService = new AccountServiceImpl(new AccountsDaoImpl(connection));
             final TransactionDaoImpl transactionDao = new TransactionDaoImpl(connection);
 
-            Account fromAccount = accountsDao.get(fromAccountId);
-            Account toAccount = accountsDao.get(toAccountId);
+            Account fromAccount = accountService.getAccount(fromAccountId);
+            Account toAccount = accountService.getAccount(toAccountId);
 
-            accountService.updateAmount(fromAccountId, fromAccount.getAmount().add(amount.negate()));
-            accountService.updateAmount(toAccountId, toAccount.getAmount().add(amount));
-
+            accountService.updateAmount(fromAccountId, amount.negate());
+            accountService.updateAmount(toAccountId, amount);
 
             transactionDao.createTable();
             transactionDao.commitTransaction(amount, fromAccountId, toAccountId);
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             throw new DBException(e);
         }

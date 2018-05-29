@@ -13,7 +13,7 @@ public class TablesCleaner {
 
     public static void main(String[] args) throws SQLException {
         new AccountsDaoImpl(conn).dropTable();
-        new UsersDaoImpl(conn).dropTable();
-        new TransactionDaoImpl(conn).dropTable();
+//        new UsersDaoImpl(conn).dropTable();
+//        new TransactionDaoImpl(conn).dropTable();
     }
 }

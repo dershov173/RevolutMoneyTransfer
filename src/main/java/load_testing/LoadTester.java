@@ -15,20 +15,17 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class LoadTester {
-    private static final long NUM_EXECUTORS = 20;
+    private static final long NUM_EXECUTORS = 2000;
     private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
-    private static final long sumOfCounters = NUM_EXECUTORS*(NUM_EXECUTORS-1)/2;
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         ExecutorService executorService = Executors.newFixedThreadPool((int) NUM_EXECUTORS);
 
         List<Future<Long>> results = executorService.invokeAll(formCollectionOfOperations());
-        long counters = 0;
         for(Future<Long> result : results){
-            counters +=result.get();
+            result.get();
         }
         executorService.shutdown();
-        assert counters == sumOfCounters;
         System.out.println("main ends");
 
     }
