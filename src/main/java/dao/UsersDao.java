@@ -5,9 +5,8 @@ import model.User;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface UsersDao extends Dao<User> {
+public interface UsersDao extends Dao {
     User get(long userId) throws SQLException;
-    @Override
     List<User> getAllEntries() throws SQLException;
     @Override
     void createTable() throws SQLException;

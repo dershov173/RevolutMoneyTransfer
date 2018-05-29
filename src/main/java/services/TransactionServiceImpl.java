@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.sql.Connection.TRANSACTION_SERIALIZABLE;
 
@@ -51,48 +52,34 @@ public class TransactionServiceImpl implements TransactionService {
             throw new TransactionNotAllowedException("You cannot transfer money between the same accounts");
         }
 
-        try {
-            Account fromAccount = accountsDao.get(fromAccountId);
-            Account toAccount = accountsDao.get(toAccountId);
-            if (fromAccount == null || toAccount == null){
-                throw new AccountNotFoundException("Account not found");
-            }
-
-            final BigDecimal calculatedValue = fromAccount.getAmount().add(amount.negate());
-
-            if (amount.compareTo(BigDecimal.ZERO) < 0){
-                throw new TransactionNotAllowedException("Only positive amounts of money can be transferred");
-            }
-
-            if (calculatedValue.compareTo(BigDecimal.ZERO) < 0){
-                throw new TransactionNotAllowedException("Sender with id = " + fromAccountId +
-                        "has not enough money to transfer");
-            }
-
-            transferMoney(fromAccountId, toAccountId, amount);
-        } catch (SQLException e) {
-            throw new DBException(e);
+        if (amount.compareTo(BigDecimal.ZERO) < 0){
+            throw new TransactionNotAllowedException("Only positive amounts of money can be transferred");
         }
+
+        transferMoney(fromAccountId, toAccountId, amount);
+
     }
 
-    private void transferMoney(long fromAccountId, long toAccountId, BigDecimal amount) throws SQLException {
+    private void transferMoney(long fromAccountId, long toAccountId, BigDecimal amount) throws TransactionNotAllowedException, AccountNotFoundException, DBException {
         try(Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
             connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE);
             connection.setAutoCommit(false);
 
-            final AccountsDao accountsDao = new AccountsDaoImpl(connection);
+            final AccountService accountService = new AccountServiceImpl(new AccountsDaoImpl(connection));
             final TransactionDaoImpl transactionDao = new TransactionDaoImpl(connection);
 
             Account fromAccount = accountsDao.get(fromAccountId);
             Account toAccount = accountsDao.get(toAccountId);
 
-            accountsDao.updateAmount(fromAccountId, fromAccount.getAmount().add(amount.negate()), 0);
-            accountsDao.updateAmount(toAccountId, toAccount.getAmount().add(amount), 0);
+            accountService.updateAmount(fromAccountId, fromAccount.getAmount().add(amount.negate()));
+            accountService.updateAmount(toAccountId, toAccount.getAmount().add(amount));
 
 
             transactionDao.createTable();
             transactionDao.commitTransaction(amount, fromAccountId, toAccountId);
             connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new DBException(e);
         }
     }
 }

@@ -44,7 +44,7 @@ public class VersioningTester {
         final AccountService service = new AccountServiceImpl(new AccountsDaoImpl(conn));
         for (int i = 0; i < NUM_EXECUTORS; i++){
             operations.add(() -> {
-
+                System.out.println(service.getAccount(ACCOUNT_ID).getVersion());
                 service.updateAmount(ACCOUNT_ID, new BigDecimal(10));
                 return 0;
             });

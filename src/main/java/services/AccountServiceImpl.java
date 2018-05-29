@@ -39,9 +39,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAllAccounts() throws DBException {
+    public List<Account> getAllAccountsForSpecifiedId(long userId) throws DBException {
         try {
-            return (accountsDao.getAllEntries());
+            return (accountsDao.getAllEntriesForSpecifiedId(userId));
         } catch (SQLException e) {
             throw new DBException(e);
         }

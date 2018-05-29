@@ -57,7 +57,8 @@ public class AllAccountsResource extends ServerResource {
     public Representation get() {
         JSONArray response = null;
         try {
-            response = new JSONArray(service.getAllAccounts());
+            long userId = Long.parseLong(getAttribute("user_id"));
+            response = new JSONArray(service.getAllAccountsForSpecifiedId(userId));
         } catch (DBException e) {
             e.printStackTrace();
         }

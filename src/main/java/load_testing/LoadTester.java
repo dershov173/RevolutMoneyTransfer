@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class LoadTester {
-    private static final long NUM_EXECUTORS = 1000;
+    private static final long NUM_EXECUTORS = 20;
     private static final Connection conn = C3P0DataSource.getInstance().getH2Connection();
     private static final long sumOfCounters = NUM_EXECUTORS*(NUM_EXECUTORS-1)/2;
 

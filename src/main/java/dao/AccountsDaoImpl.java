@@ -35,8 +35,9 @@ public class AccountsDaoImpl  implements AccountsDao{
     }
 
     @Override
-    public List<Account> getAllEntries() throws SQLException {
-        return executor.executeQuery("select * from accounts", result -> {
+    public List<Account> getAllEntriesForSpecifiedId(long userId) throws SQLException {
+        return executor.executeQuery("select * from accounts" +
+                " where user_id = ?", result -> {
             ArrayList<Account> accounts = new ArrayList<>();
             while (result.next()) {
                 Account account = new Account(result.getLong("account_id"),
@@ -46,7 +47,7 @@ public class AccountsDaoImpl  implements AccountsDao{
                 accounts.add(account);
             }
             return accounts;
-        });
+        }, userId);
     }
 
     @Override
@@ -80,18 +81,4 @@ public class AccountsDaoImpl  implements AccountsDao{
         logger.info("Table accounts no longer exists");
     }
 
-    @Override
-    public Account getVersioningAccount(long accountId, int version) throws SQLException {
-        final String query = "select * from accounts where account_id=? and version=?";
-        return executor.executeQuery(query, result -> {
-            if (result.next()) {
-                return new Account(result.getLong("account_id"),
-                        result.getLong("user_id"),
-                        result.getBigDecimal("amount"),
-                        result.getInt("version"));
-            } else {
-                return null;
-            }
-        }, accountId, version);
-    }
 }
