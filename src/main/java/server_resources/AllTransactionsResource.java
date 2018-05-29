@@ -1,6 +1,5 @@
 package server_resources;
 
-import dao.AccountsDaoImpl;
 import dao.TransactionDaoImpl;
 import db_service.C3P0DataSource;
 import exceptions.AccountNotFoundException;
@@ -29,7 +28,7 @@ public class AllTransactionsResource extends ServerResource {
     private final TransactionService service;
 
     public AllTransactionsResource() {
-        service = new TransactionServiceImpl(new TransactionDaoImpl(conn), new AccountsDaoImpl(conn));
+        service = new TransactionServiceImpl(new TransactionDaoImpl(conn));
     }
 
     @Post

@@ -14,15 +14,14 @@ import model.Transaction;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.List;
 
 public class TransactionServiceImpl implements TransactionService {
-    private final AccountsDao accountsDao;
     private final TransactionsDao transactionsDao;
 
-    public TransactionServiceImpl(TransactionsDao transactionsDao, AccountsDao accountsDao) {
+    public TransactionServiceImpl(TransactionsDao transactionsDao) {
         this.transactionsDao = transactionsDao;
-        this.accountsDao = accountsDao;
     }
 
     @Override
@@ -59,19 +58,23 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void transferMoney(long fromAccountId, long toAccountId, BigDecimal amount) throws TransactionNotAllowedException, AccountNotFoundException, DBException {
         try(Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
-
-
+            Savepoint savepoint = connection.setSavepoint();
             final AccountService accountService = new AccountServiceImpl(new AccountsDaoImpl(connection));
             final TransactionDaoImpl transactionDao = new TransactionDaoImpl(connection);
 
-            Account fromAccount = accountService.getAccount(fromAccountId);
-            Account toAccount = accountService.getAccount(toAccountId);
+            try {
+                accountService.updateAmount(fromAccountId, amount.negate());
+                accountService.updateAmount(toAccountId, amount);
 
-            accountService.updateAmount(fromAccountId, amount.negate());
-            accountService.updateAmount(toAccountId, amount);
-
-            transactionDao.createTable();
-            transactionDao.commitTransaction(amount, fromAccountId, toAccountId);
+                transactionDao.createTable();
+                transactionDao.commitTransaction(amount, fromAccountId, toAccountId);
+            } catch (TransactionNotAllowedException | AccountNotFoundException | DBException e ){
+                connection.rollback(savepoint);
+                throw e;
+            } catch (Exception e){
+                connection.rollback(savepoint);
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             throw new DBException(e);
         }
