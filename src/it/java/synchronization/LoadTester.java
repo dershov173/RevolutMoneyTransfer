@@ -27,8 +27,6 @@ public class LoadTester {
         accountsDao.createTable();
         accountsDao.createAccount(firstAccountId, new BigDecimal(10));
         accountsDao.createAccount(secondAccountId, new BigDecimal(10));
-        final int oldVersion1 = accountsDao.get(firstAccountId).getVersion();
-        final int oldVersion2 = accountsDao.get(secondAccountId).getVersion();
 
         ExecutorService executorService = Executors.newFixedThreadPool((int) NUM_EXECUTORS);
 
@@ -38,11 +36,7 @@ public class LoadTester {
             result.get();
         }
         executorService.shutdown();
-        final int newVersion1 = new AccountsDaoImpl(conn).get(firstAccountId).getVersion();
-        final int newVersion2 = new AccountsDaoImpl(conn).get(secondAccountId).getVersion();
 
-        assert newVersion1 == oldVersion1 + NUM_EXECUTORS;
-        assert newVersion2 == oldVersion2 + NUM_EXECUTORS;
         System.out.println("test for loading successful");
 
     }
@@ -59,7 +53,7 @@ public class LoadTester {
                 long fromAccountId = threadId % 2 == 0? firstAccountId:secondAccountId;
                 long toAccountId = threadId % 2 == 0? secondAccountId:firstAccountId;
 
-                BigDecimal valueToTransfer = new BigDecimal(1);
+                BigDecimal valueToTransfer = new BigDecimal(10);
                 try {
                     transactionService.commitTransaction(valueToTransfer, fromAccountId, toAccountId);
                 } catch (TransactionNotAllowedException e){
@@ -67,8 +61,8 @@ public class LoadTester {
                 }
                 BigDecimal amount1 = accountsDao.get(fromAccountId).getAmount();
                 BigDecimal amount2 = accountsDao.get(fromAccountId).getAmount();
-                assert  amount1.compareTo(BigDecimal.ZERO) > 0 &&
-                        amount2.compareTo(BigDecimal.ZERO) > 0 ;
+                assert  amount1.compareTo(BigDecimal.ZERO) >= 0 &&
+                        amount2.compareTo(BigDecimal.ZERO) >= 0 ;
                 return threadId % NUM_EXECUTORS;
             });
         }

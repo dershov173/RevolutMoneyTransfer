@@ -58,21 +58,28 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void transferMoney(long fromAccountId, long toAccountId, BigDecimal amount) throws TransactionNotAllowedException, AccountNotFoundException, DBException {
         try(Connection connection = C3P0DataSource.getInstance().getH2Connection()) {
-            Savepoint savepoint = connection.setSavepoint("update_balance");
+            //Savepoint savepoint = connection.setSavepoint("update_balance");
             final AccountService accountService = new AccountServiceImpl(new AccountsDaoImpl(connection));
             final TransactionDaoImpl transactionDao = new TransactionDaoImpl(connection);
 
             try {
-                accountService.updateAmount(fromAccountId, amount.negate());
-                accountService.updateAmount(toAccountId, amount);
+                connection.setAutoCommit(false);
+                if (fromAccountId >= toAccountId) {
+                    accountService.updateAmount(fromAccountId, amount.negate());
+                    accountService.updateAmount(toAccountId, amount);
+                } else{
+                    accountService.updateAmount(toAccountId, amount);
+                    accountService.updateAmount(fromAccountId, amount.negate());
+                }
 
                 transactionDao.createTable();
                 transactionDao.commitTransaction(amount, fromAccountId, toAccountId);
+                connection.setAutoCommit(true);
             } catch (TransactionNotAllowedException | AccountNotFoundException | DBException e ){
-                connection.rollback(savepoint);
+                connection.rollback();
                 throw e;
             } catch (Exception e){
-                connection.rollback(savepoint);
+                connection.rollback();
                 throw new RuntimeException(e);
             }
         } catch (SQLException e) {
