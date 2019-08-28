@@ -64,3 +64,4 @@ In the considered model the transaction will be writed immedeatly to data storag
 GET http://127.0.0.1:8080/money_transfers/users/1/accounts
 
 GET http://127.0.0.1:8080/money_transfers/users/2/accounts
+lemabatje was here!
